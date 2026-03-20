@@ -1,7 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import emailjs from '@emailjs/browser'
 
+const EMAILJS_PUBLIC_KEY = 'e8LQUyitmdNq6MYXd'
+
 export default function ContactForm() {
+  useEffect(() => {
+    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY })
+  }, [])
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -38,22 +43,30 @@ export default function ContactForm() {
 
     setStatus('sending')
 
+    const form = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim(),
+      message: formData.message.trim(),
+    }
+
     try {
       await emailjs.send(
-        'service_tcmjy8e',
+        'service_tcmyj8e',
         'template_j72sbs3',
         {
-          name: formData.name.trim(),
-          email: formData.email.trim(),
-          phone: formData.phone.trim(),
-          message: formData.message.trim(),
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          message: form.message,
         },
-        'e8LQUyitmdNq6MYXd'
+        EMAILJS_PUBLIC_KEY
       )
       setStatus('success')
       setFormData({ name: '', email: '', phone: '', message: '' })
       setErrors({})
-    } catch {
+    } catch (error) {
+      console.log(error)
       setStatus('error')
     }
   }
