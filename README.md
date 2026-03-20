@@ -51,6 +51,10 @@ npm preview
 └── package.json
 ```
 
+## Contact Form (EmailJS)
+
+The contact form uses [EmailJS](https://www.emailjs.com/) to send emails. It sends `name`, `email`, `phone`, and `message` fields to the configured template.
+
 ## Features
 
 - Responsive design (mobile + desktop)

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import emailjs from '@emailjs/browser'
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -7,17 +8,62 @@ export default function ContactForm() {
     phone: '',
     message: '',
   })
+  const [status, setStatus] = useState('idle') // idle | sending | success | error
+  const [errors, setErrors] = useState({})
+
+  const validate = () => {
+    const newErrors = {}
+    if (!formData.name?.trim()) newErrors.name = 'Name is required'
+    if (!formData.email?.trim()) newErrors.email = 'Email is required'
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address'
+    }
+    if (!formData.phone?.trim()) newErrors.phone = 'Phone is required'
+    if (!formData.message?.trim()) newErrors.message = 'Message is required'
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: null }))
+    if (status !== 'idle') setStatus('idle')
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
-    alert('Thank you for your inquiry! We will get back to you shortly.')
-    setFormData({ name: '', email: '', phone: '', message: '' })
+
+    if (!validate()) return
+
+    setStatus('sending')
+
+    try {
+      await emailjs.send(
+        'service_tcmjy8e',
+        'template_j72sbs3',
+        {
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
+          message: formData.message.trim(),
+        },
+        'e8LQUyitmdNq6MYXd'
+      )
+      setStatus('success')
+      setFormData({ name: '', email: '', phone: '', message: '' })
+      setErrors({})
+    } catch {
+      setStatus('error')
+    }
   }
+
+  const inputClassName = (field) =>
+    `w-full px-4 py-3.5 rounded-xl border outline-none transition-all focus:ring-2 focus:ring-xperts-red/20 ${
+      errors[field]
+        ? 'border-red-500 focus:border-red-500'
+        : 'border-gray-200 focus:border-xperts-red'
+    }`
 
   return (
     <section id="contact" className="py-20 md:py-28 bg-gray-50">
@@ -42,7 +88,7 @@ export default function ContactForm() {
             <div className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-semibold text-xperts-black mb-2">
-                  Full Name
+                  Full Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -50,16 +96,19 @@ export default function ContactForm() {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-xperts-red focus:ring-2 focus:ring-xperts-red/20 outline-none transition-all"
+                  disabled={status === 'sending'}
+                  className={inputClassName('name')}
                   placeholder="John Smith"
                 />
+                {errors.name && (
+                  <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+                )}
               </div>
 
               <div className="grid sm:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="email" className="block text-sm font-semibold text-xperts-black mb-2">
-                    Email
+                    Email <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
@@ -67,14 +116,17 @@ export default function ContactForm() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-xperts-red focus:ring-2 focus:ring-xperts-red/20 outline-none transition-all"
+                    disabled={status === 'sending'}
+                    className={inputClassName('email')}
                     placeholder="john@company.com"
                   />
+                  {errors.email && (
+                    <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+                  )}
                 </div>
                 <div>
                   <label htmlFor="phone" className="block text-sm font-semibold text-xperts-black mb-2">
-                    Phone
+                    Phone <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="tel"
@@ -82,34 +134,53 @@ export default function ContactForm() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-xperts-red focus:ring-2 focus:ring-xperts-red/20 outline-none transition-all"
+                    disabled={status === 'sending'}
+                    className={inputClassName('phone')}
                     placeholder="(555) 123-4567"
                   />
+                  {errors.phone && (
+                    <p className="mt-1 text-sm text-red-500">{errors.phone}</p>
+                  )}
                 </div>
               </div>
 
               <div>
                 <label htmlFor="message" className="block text-sm font-semibold text-xperts-black mb-2">
-                  Message
+                  Message <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   id="message"
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  required
+                  disabled={status === 'sending'}
                   rows={5}
-                  className="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-xperts-red focus:ring-2 focus:ring-xperts-red/20 outline-none transition-all resize-none"
+                  className={inputClassName('message') + ' resize-none'}
                   placeholder="Describe your facility management needs..."
                 />
+                {errors.message && (
+                  <p className="mt-1 text-sm text-red-500">{errors.message}</p>
+                )}
               </div>
             </div>
 
+            {status === 'success' && (
+              <p className="mt-6 p-4 rounded-xl bg-green-50 text-green-700 text-center font-medium">
+                Message sent successfully
+              </p>
+            )}
+            {status === 'error' && (
+              <p className="mt-6 p-4 rounded-xl bg-red-50 text-red-700 text-center font-medium">
+                Something went wrong, please try again
+              </p>
+            )}
+
             <button
               type="submit"
-              className="w-full mt-8 bg-xperts-red hover:bg-xperts-red-dark text-white py-4 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all duration-300"
+              disabled={status === 'sending'}
+              className="w-full mt-8 bg-xperts-red hover:bg-xperts-red-dark text-white py-4 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:shadow-md"
             >
-              Send Message
+              {status === 'sending' ? 'Sending...' : 'Send Message'}
             </button>
           </form>
         </div>
