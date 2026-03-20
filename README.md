@@ -1,6 +1,6 @@
-# Xperts Services - Facility Management Website
+# Xperts Services - Facility Services Website
 
-A modern, responsive business website for Xperts Services facility management company.
+A modern, responsive business website for Xperts Services facility services company.
 
 ## Tech Stack
 

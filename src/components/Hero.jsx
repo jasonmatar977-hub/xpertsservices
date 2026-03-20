@@ -13,7 +13,7 @@ export default function Hero() {
             Experts at Your Service
           </p>
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-xperts-black leading-[1.1] tracking-tight mb-8">
-            Reliable Facility Management Services
+            Reliable Facility Services
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 leading-relaxed mb-12 max-w-2xl">
             Electrical, Plumbing, HVAC & General Maintenance

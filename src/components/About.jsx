@@ -8,11 +8,11 @@ export default function About() {
               About Xperts Services
             </span>
             <h2 className="text-3xl md:text-4xl font-bold text-xperts-black mb-8 leading-tight">
-              Your Trusted Partner in Facility Management
+              Your Trusted Partner in Facility Services
             </h2>
             <div className="space-y-6 text-gray-600 text-lg leading-relaxed">
               <p>
-                Xperts Services delivers dependable facility management solutions when you need them most. 
+                Xperts Services delivers dependable facility services when you need them most. 
                 Our team of licensed professionals provides fast response times and reliable service across 
                 the Pacific Northwest and Southwest.
               </p>

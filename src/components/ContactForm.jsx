@@ -169,7 +169,7 @@ export default function ContactForm() {
                   disabled={status === 'sending'}
                   rows={5}
                   className={inputClassName('message') + ' resize-none'}
-                  placeholder="Describe your facility management needs..."
+                  placeholder="Describe your facility needs..."
                 />
                 {errors.message && (
                   <p className="mt-1 text-sm text-red-500">{errors.message}</p>

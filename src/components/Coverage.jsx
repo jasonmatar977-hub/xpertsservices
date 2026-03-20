@@ -27,7 +27,7 @@ export default function Coverage() {
             Regional Coverage
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            We provide reliable facility management services across the Pacific Northwest, California, and the Southwest. Our team of experienced technicians ensures fast response times and consistent quality across all service areas.
+            We provide reliable facility services across the Pacific Northwest, California, and the Southwest. Our team of experienced technicians ensures fast response times and consistent quality across all service areas.
           </p>
         </div>
 
